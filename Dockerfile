@@ -3,8 +3,21 @@ FROM nginx:alpine
 EXPOSE 80
 EXPOSE 443
 
+# Copy our files over
+COPY . /usr/share/nginx/temp
+WORKDIR /usr/share/nginx/temp
+
+# Use the Linux Alpine to install bash, nodejs, and npm
+RUN apk update
+RUN apk upgrade
+RUN apk add bash
+RUN apk add --update nodejs
+RUN apk add --update npm
+
 # Copy all files to the html folder, and set this as the current dir
-COPY . /usr/share/nginx/html
+RUN npm install
+RUN npm run build
+COPY build/* /usr/share/nginx/html/
 WORKDIR /usr/share/nginx/html
 
 # Remove the default Nginx configuration file and add cert directory
@@ -24,9 +37,7 @@ ADD certs/private.key /etc/nginx/certs/
 # Add mime.types 
 ADD mime.types /etc/nginx/conf/
 
-# Use the Linux Alpine to install bash, nodejs, and npm
-RUN apk update
-RUN apk upgrade
-RUN apk add bash
-RUN apk add --update nodejs
-RUN apk add --update npm
+# Fix the file directory structure
+run mkdir static
+run mv js static/
+run mv css static/
