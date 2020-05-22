@@ -315,11 +315,11 @@ export class Game extends React.Component {
               winner={this.state.winner}
               check={this.state.isInCheck} />
           </div>
-          <div className="game-info">
+          {/*<div className="game-info">
             <TakenPieces 
                 piecePositions={this.state.piecePositions}
                 pieces={this.state.pieces}/>
-          </div>
+      </div>*/}
         </div>
       );
     }
