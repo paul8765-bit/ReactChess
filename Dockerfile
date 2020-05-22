@@ -17,7 +17,9 @@ RUN apk add --update npm
 # Copy all files to the html folder, and set this as the current dir
 RUN npm install
 RUN npm run build
-COPY build/* /usr/share/nginx/html/
+WORKDIR build
+RUN rm -rf /usr/share/nginx/html/*
+RUN cp -r * /usr/share/nginx/html/
 WORKDIR /usr/share/nginx/html
 
 # Remove the default Nginx configuration file and add cert directory
