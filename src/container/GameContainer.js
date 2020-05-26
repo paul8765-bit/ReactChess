@@ -1,17 +1,16 @@
 import React from 'react';
-import { Winner } from './Winner';
-import { Colour} from './Colour';
-import { Board, GetBoard } from './Board';
-import { GetPieces, GetPieceColourById, GetPieceTypeById, GetPieceIdByPosition,  } from './Piece';
-import { RenderSquare } from './Square';
-import { GetPiecePositions } from './PiecePositions';
+import { Winner } from '../model/Winner';
+import { Colour} from '../model/Colour';
+import { GetBoard } from './BoardContainer';
+import { GetPieces, GetPieceColourById, GetPieceTypeById, GetPieceIdByPosition,  } from '../container/PieceContainer';
+import { RenderSquare } from './SquareContainer';
+import { GetPiecePositions } from '../model/PiecePositions';
 import { GetPossibleMoves } from './MoveManager';
-import { TakenPieces } from './TakenPieces';
 import { cloneDeep } from 'lodash';
-import { PieceType } from './PieceType';
+import { PieceType } from '../model/PieceType';
+import { Game } from '../presentational/Game';
 
-
-export class Game extends React.Component {
+export class GameContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -304,24 +303,13 @@ export class Game extends React.Component {
     }
     
     render() {
-      return (
-        <div className="game">
-          <div className="game-board">
-            <Board 
-              nextTurn={this.state.currentTurn}
-              squares={this.state.board} 
-              pieces={this.state.pieces}
-              piecePositions={this.state.piecePositions}
-              winner={this.state.winner}
-              check={this.state.isInCheck} />
-          </div>
-          {/*<div className="game-info">
-            <TakenPieces 
-                piecePositions={this.state.piecePositions}
-                pieces={this.state.pieces}/>
-      </div>*/}
-        </div>
-      );
+      return <Game 
+                  nextTurn={this.state.currentTurn}
+                  squares={this.state.board} 
+                  pieces={this.state.pieces}
+                  piecePositions={this.state.piecePositions}
+                  winner={this.state.winner}
+                  check={this.state.isInCheck} />;
     }
   }
 

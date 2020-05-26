@@ -1,8 +1,8 @@
-import { GetPieceColourById, GetPieceIdByPosition, GetPieceTypeById } from './Piece';
-import { PieceType } from './PieceType';
+import { GetPieceColourById, GetPieceIdByPosition, GetPieceTypeById } from './PieceContainer';
+import { PieceType } from '../model/PieceType';
 import { IncrementColumn, IncrementRow, DecrementColumn, DecrementRow } from './ColumnAndRowManager';
-import { Colour } from './Colour';
-import { CheckEval } from './Game';
+import { Colour } from '../model/Colour';
+import { CheckEval } from './GameContainer';
 import { cloneDeep } from 'lodash';
 
 export function GetPossibleMoves(pieceId, location, pieces, piecePositions, currentTurn, ongoingCheckEval = false) {
@@ -39,10 +39,10 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
     const possibleMovesForCheck = [];
     possibleMoves.forEach(move => {
       if (WillMoveResultInCheck(pieceId, piecePositions, currentTurn, move, pieces)) {
-        console.log(`Not allowing move to ${move} because this does not resolve check`);
+        //console.log(`Not allowing move to ${move} because this does not resolve check`);
       }
       else {
-        console.log(`Move to ${move} is fine as it resolves check`);
+        //console.log(`Move to ${move} is fine as it resolves check`);
         possibleMovesForCheck.push(move);
       }
     });
@@ -257,7 +257,7 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
     let keepMovingInThisDirection = true;
     // Is this square outside the board?
     if (!isInBoundsOfBoard(nextPosition)) {
-      console.log(`${pieceId} cannot move to ${nextPosition} as it is outside of the board`);
+      //console.log(`${pieceId} cannot move to ${nextPosition} as it is outside of the board`);
       keepMovingInThisDirection = false;
     }
     // Is there a piece in this square already?
@@ -266,7 +266,7 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
 
       // If this piece is friendly, we cannot move here and must stop
       if (GetPieceColourById(pieces, pieceIdAlreadyInSquare) === currentTurn) {
-        console.log(`${pieceId} cannot move to ${nextPosition} as friendly piece ${pieceIdAlreadyInSquare} is already there`);
+        //console.log(`${pieceId} cannot move to ${nextPosition} as friendly piece ${pieceIdAlreadyInSquare} is already there`);
         keepMovingInThisDirection = false;
       }
       // Else an enemy piece here - this move is allowed but no further
@@ -302,12 +302,12 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
                     possibleMoves.push(position);
                 }
                 else {
-                    console.log(`Not permitting move to ${position} for knight ${pieceInSpace} as a friendly piece is there (${pieceInSpace})`);
+                    //console.log(`Not permitting move to ${position} for knight ${pieceInSpace} as a friendly piece is there (${pieceInSpace})`);
                 }
             }
         }
         else {
-            console.log(`Not suggesting move to ${position} for knight ${pieceId} as it is not in bounds of board`);
+            //console.log(`Not suggesting move to ${position} for knight ${pieceId} as it is not in bounds of board`);
         }
     });
 
@@ -344,7 +344,7 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
     // no pieces in the way
     const moveForwardsLocationArray = getPositionsMovingForwards(location, 2, currentTurn);
     if (moveForwardsLocationArray.length === 0) {
-    console.log(`No forward locations identified for piece ${pieceId}`);
+      //console.log(`No forward locations identified for piece ${pieceId}`);
     }
     else {
         const forwardPosition = moveForwardsLocationArray[0];
@@ -354,8 +354,8 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
         // Into an empty space
         if (GetPieceIdByPosition(forwardPosition, piecePositions)) {
             // There is already a piece in this position so skip it
-            console.log(`getPossibleMoves: piece ${pieceId} is not able to move to ${forwardPosition} as 
-                                            piece ${GetPieceIdByPosition(forwardPosition, piecePositions)} is alreay there`);
+            //console.log(`getPossibleMoves: piece ${pieceId} is not able to move to ${forwardPosition} as 
+            //                                piece ${GetPieceIdByPosition(forwardPosition, piecePositions)} is alreay there`);
         }
         else {
             possibleMoves.push(forwardPosition);
@@ -371,22 +371,22 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
                     possibleMoves.push(doubleForwardPosition);
                 }
                 else {
-                    console.log(`No double-move to ${location} permitted for ${pieceId} as the destination square is not empty`);
+                    //console.log(`No double-move to ${location} permitted for ${pieceId} as the destination square is not empty`);
                 }
             }
             else {
-                console.log(`No double-move to ${location} permitted for ${pieceId} as the piece would have to travel through another piece`);
+                //console.log(`No double-move to ${location} permitted for ${pieceId} as the piece would have to travel through another piece`);
             }
         }
         else {
-            console.log(`No double-move permitted for ${pieceId} as it is not on its starting space (currently on ${location})`);
+            //console.log(`No double-move permitted for ${pieceId} as it is not on its starting space (currently on ${location})`);
         }
     }
 
     // Unless they are taking an opponent piece, in which case they can move diagonally forward
     const moveDiagonallyLocation = getPositionMovingDiagonally(location, 1, currentTurn);
     if (moveDiagonallyLocation === 0) {
-    console.log(`No diagonal locations identified for piece ${pieceId}`);
+      //console.log(`No diagonal locations identified for piece ${pieceId}`);
     }
     else {
     moveDiagonallyLocation.forEach(diagonalPosition => {
@@ -394,11 +394,11 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
         const pieceInPossiblePosition = GetPieceIdByPosition(diagonalPosition, piecePositions);
         if (pieceInPossiblePosition && GetPieceColourById(pieces, pieceInPossiblePosition) !== 
                                                                             currentTurn) {
-        console.log(`Position ${diagonalPosition} DOES meet the criteria for a diagonal move`);
-        possibleMoves.push(diagonalPosition);
+          //console.log(`Position ${diagonalPosition} DOES meet the criteria for a diagonal move`);
+          possibleMoves.push(diagonalPosition);
         }
         else {
-        console.log(`Position ${diagonalPosition} does not meet the criteria for a diagonal move`);
+          //console.log(`Position ${diagonalPosition} does not meet the criteria for a diagonal move`);
         }
     });
     }
@@ -420,8 +420,8 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
     const newPositions = [];
     for (let distanceIndex = 1; distanceIndex <= maxDistance; distanceIndex++) {
         const newPosition = IncrementRow(position, currentTurn, distanceIndex);
-        isInBoundsOfBoard(newPosition) ? newPositions.push(newPosition) : 
-            console.log(`Not suggesting position ${newPosition} as it is out of bounds of board`);
+        if (isInBoundsOfBoard(newPosition)) newPositions.push(newPosition);
+            //console.log(`Not suggesting position ${newPosition} as it is out of bounds of board`);
     }
     
     return newPositions;
@@ -450,10 +450,10 @@ export function GetPossibleMoves(pieceId, location, pieces, piecePositions, curr
     for (let distance = 1; distance <= maxDistance; distance++) {
       const newPositionToLeft = IncrementRow(DecrementColumn(position), currentTurn, 1);
       const newPositionToRight = IncrementRow(IncrementColumn(position), currentTurn, 1);
-      isInBoundsOfBoard(newPositionToLeft) ? newPositions.push(newPositionToLeft) : 
-            console.log(`Not suggesting position ${newPositionToLeft} as it is out of bounds of board`);
-      isInBoundsOfBoard(newPositionToRight) ? newPositions.push(newPositionToRight) : 
-            console.log(`Not suggesting position ${newPositionToRight} as it is out of bounds of board`);
+      if (isInBoundsOfBoard(newPositionToLeft)) newPositions.push(newPositionToLeft);  
+            //console.log(`Not suggesting position ${newPositionToLeft} as it is out of bounds of board`);
+      if (isInBoundsOfBoard(newPositionToRight)) newPositions.push(newPositionToRight); 
+            //console.log(`Not suggesting position ${newPositionToRight} as it is out of bounds of board`);
     }
     return newPositions;
   }
