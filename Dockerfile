@@ -38,8 +38,3 @@ ADD certs/private.key /etc/nginx/certs/
 
 # Add mime.types 
 ADD mime.types /etc/nginx/conf/
-
-# Fix the file directory structure
-run mkdir static
-run mv js static/
-run mv css static/
