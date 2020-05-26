@@ -1,4 +1,4 @@
-import { Colour } from './Colour';
+import { Colour } from '../model/Colour';
 
 function internalIncrementColumn(currentPosition) {
     const currentColumn = currentPosition[0];
